@@ -1,0 +1,95 @@
+﻿@page "/ProductPage"
+@using DataAccess.Classes
+@using DevExpress.Utils.Filtering
+@using Entities.Models
+@inject DalProduct _DalProduct
+<PageTitle>ProductsList</PageTitle>
+<DxGrid Data="@Data"
+        AllowColumnDragDrop=true
+        AllowSort=true
+        ColumnResizeMode=GridColumnResizeMode.NextColumn
+        EditMode=GridEditMode.EditForm
+        PageSize=@clmName.pSize
+        SelectionMode=GridSelectionMode.Multiple
+        ShowFilterRow=true
+        ShowGroupedColumns=true
+        ShowGroupPanel=true>
+    <Columns>
+        <DxGridDataColumn FieldName="@clmName.prdId"
+                          Caption="@clmName.prdId"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.prdName"
+                          Caption="@clmName.prdName"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.supId"
+                          Caption="@clmName.supId"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.catId"
+                          Caption="@clmName.catId"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.qty"
+                          Caption="@clmName.qty"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.price"
+                          Caption="@clmName.price"
+                          TextAlignment=GridTextAlignment.Right
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.stock"
+                          Caption="@clmName.stock"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.order"
+                          Caption="@clmName.order"
+                          TextAlignment=GridTextAlignment.Right
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="@clmName.disc"
+                          Caption="@clmName.disc"
+                          Width="@clmName.wdt">
+        </DxGridDataColumn>
+    </Columns>
+    <GroupSummary>
+        <DxGridSummaryItem SummaryType=GridSummaryItemType.Sum
+                           FieldName="@clmName.stock"
+                           ValueDisplayFormat="{0:0,00} Adet" />
+    </GroupSummary>
+    <TotalSummary>
+        <DxGridSummaryItem FieldName="@clmName.stock"
+                           ValueDisplayFormat="{0:0,00} Adet"
+                           SummaryType=GridSummaryItemType.Sum />
+        <DxGridSummaryItem FieldName="@clmName.prdId"
+                           SummaryType=GridSummaryItemType.Count
+                           ValueDisplayFormat="{0} Adet" />
+    </TotalSummary>
+</DxGrid>
+
+@code {
+    (string prdId, string prdName,
+    string supId, string catId,
+    string qty, string price,
+    string stock, string order,
+    string disc, string @wdt, int pSize) clmName
+    = (prdId: nameof(Product.ProductId),
+    prdName: nameof(Product.ProductName),
+    supId: nameof(Product.SupplierId),
+    catId: nameof(Product.CategoryId),
+    qty: nameof(Product.QuantityPerUnit),
+    price: nameof(Product.UnitPrice),
+    stock: nameof(Product.UnitsInStock),
+    order: nameof(Product.UnitsOnOrder),
+    disc: nameof(Product.Discontinued),
+    @wdt: "150px", pSize: 10);
+
+    IQueryable<Product> Data { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Data = _DalProduct.GetAll().ToList().AsQueryable(); // Verileri listeye çevirip IQueryable yapıyoruz
+    }
+}
